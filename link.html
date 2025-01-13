@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* [Previous styles remain the same until :root] */
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    :root {
+      --neon-red: #ff1f1f;
+      --neon-blue: #00fffc;
+      --blood-red: #8b0000;
+      --toxic-green: #39ff14;
+      --dark-bg: #080808;
+      --glass: rgba(15, 15, 20, 0.9);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--dark-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      perspective: 1000px;
+    }
+
+    .cyber-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: 
+        linear-gradient(rgba(0,0,0,0.92), rgba(0,0,0,0.92)),
+        url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ff1f1f' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .glitch-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.1) 0px,
+        rgba(0,0,0,0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      animation: scanline 8s linear infinite;
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .noise {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.05;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100%); }
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      z-index: 1;
+      box-shadow: 0 0 50px rgba(255, 31, 31, 0.2);
+      animation: containerGlitch 8s infinite;
+    }
+
+    @keyframes containerGlitch {
+      0%, 100% { transform: none; }
+      92% { transform: skew(2deg); }
+      96% { transform: skew(-2deg); }
+    }
+
+    .blood-drip {
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 100px;
+      background: linear-gradient(var(--neon-red), transparent);
+      animation: drip 3s linear infinite;
+    }
+
+    @keyframes drip {
+      0% { transform: translateY(-100%); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    [Previous logo-container and logo-face styles remain similar but with red glow]
+    .logo-face {
+      background: rgba(255, 31, 31, 0.1);
+      border: 2px solid var(--neon-red);
+      color: var(--neon-red);
+      text-shadow: 0 0 10px var(--neon-red);
+    }
+
+    .title {
+      font-size: 3.5em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      position: relative;
+      color: var(--neon-red);
+      text-shadow: 0 0 20px var(--neon-red);
+      letter-spacing: 5px;
+      animation: titleFlicker 4s infinite;
+    }
+
+    @keyframes titleFlicker {
+      0%, 100% { opacity: 1; }
+      92% { opacity: 1; }
+      93% { opacity: 0.3; }
+      94% { opacity: 1; }
+      95% { opacity: 0.3; }
+      96% { opacity: 1; }
+      97% { opacity: 0.3; }
+      98% { opacity: 1; }
+    }
+
+    .title::before, .title::after {
+      content: attr(data-text);
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      opacity: 0.8;
+    }
+
+    .title::before {
+      color: var(--toxic-green);
+      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+      animation: glitchTop 3s infinite linear alternate-reverse;
+    }
+
+    .title::after {
+      color: var(--neon-red);
+      clip-path: polygon(0 80%, 100% 20%, 100% 100%, 0 100%);
+      animation: glitchBottom 2.5s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitchTop {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    @keyframes glitchBottom {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    .subtitle {
+      color: var(--toxic-green);
+      font-size: 1.2em;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      animation: subtitleGlitch 5s infinite;
+    }
+
+    .warning-text {
+      position: absolute;
+      top: 20px;
+      color: var(--neon-red);
+      font-size: 0.8em;
+      opacity: 0.7;
+      animation: warningBlink 2s infinite;
+    }
+
+    @keyframes warningBlink {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.3; }
+    }
+
+    .link-item {
+      position: relative;
+      width: 100%;
+      padding: 12px 25px;
+      margin: 15px 0;
+      color: var(--neon-red);
+      text-decoration: none;
+      background: rgba(255, 31, 31, 0.1);
+      border: 1px solid var(--neon-red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: all 0.3s;
+      transform-style: preserve-3d;
+      font-size: 1.1em;
+      letter-spacing: 2px;
+    }
+
+    .link-item:hover {
+      background: rgba(255, 31, 31, 0.2);
+      transform: translateX(10px) translateZ(20px);
+      box-shadow: -5px 0 20px rgba(255, 31, 31, 0.5);
+      text-shadow: 0 0 10px var(--neon-red);
+    }
+
+    .link-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 31, 31, 0.4), transparent);
+      transition: 0.5s;
+    }
+
+    .link-item::after {
+      content: '×';
+      position: absolute;
+      right: 20px;
+      color: var(--neon-red);
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .link-item:hover::before {
+      left: 100%;
+    }
+
+    .link-item:hover::after {
+      opacity: 1;
+    }
+
+    .footer {
+      margin-top: 40px;
+      color: var(--toxic-green);
+      font-size: 0.9em;
+      text-align: center;
+      letter-spacing: 2px;
+      opacity: 0.7;
+    }
+
+    .binary-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .binary {
+      position: absolute;
+      color: var(--neon-red);
+      font-size: 14px;
+      line-height: 1;
+      opacity: 0;
+      animation: binaryFall linear infinite;
+    }
+
+    @keyframes binaryFall {
+      0% { transform: translateY(-100%); opacity: 0; }
+      30% { opacity: 0.5; }
+      70% { opacity: 0.5; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cyber-background"></div>
+  <div class="glitch-overlay"></div>
+  <div class="noise"></div>
+  <div class="binary-rain" id="binaryRain"></div>
+  
+  <div class="container">
+    <p class="warning-text">[WARNING: UNAUTHORIZED ACCESS DETECTED]</p>
+    
+    <div class="logo-container">
+      <div class="logo-face face-front">H</div>
+      <div class="logo-face face-back">E</div>
+      <div class="logo-face face-right">L</div>
+      <div class="logo-face face-left">L</div>
+      <div class="logo-face face-top">O</div>
+    </div>
+
+    <h1 class="title" data-text="BLACKLINE">BLACKLINE</h1>
+    <p class="subtitle">[JOIN US]</p>
+
+    <div class="links">
+      <a href="https://t.me/BlackLineGroup" class="link-item">PRIVATE GROUP</a>
+      <a href="https://t.me/BlackLineCH" class="link-item">COMMUNITY</a>
+      <a href="https://instagram.com/blacklinegroup_" class="link-item">INSTAGRAM</a>
+    </div>
+
+    <div class="footer">
+      [SYSTEM_COMPROMISED :: TRACE_DETECTED]
+    </div>
+  </div>
+
+  <script>
+    // Create blood drips
+    function createBloodDrip() {
+      const drip = document.createElement('div');
+      drip.className = 'blood-drip';
+      drip.style.left = Math.random() * 100 + '%';
+      document.querySelector('.container').appendChild(drip);
+      
+      drip.addEventListener('animationend', () => {
+        drip.remove();
+      });
+    }
+
+    setInterval(createBloodDrip, 2000);
+
+    // Binary rain effect
+    function createBinaryRain() {
+      const binaryRain = document.getElementById('binaryRain');
+      const binary = document.createElement('div');
+      binary.className = 'binary';
+      binary.style.left = Math.random() * 100 + 'vw';
+      binary.style.animationDuration = Math.random() * 2 + 3 + 's';
+      binary.textContent = Math.random() > 0.5 ? '1' : '0';
+      binaryRain.appendChild(binary);
+
+      binary.addEventListener('animationend', () => {
+        binary.remove();
+      });
+    }
+
+    setInterval(createBinaryRain, 100);
+
+    // Title glitch effect
+    const title = document.querySelector('.title');
+    setInterval(() => {
+      if(Math.random() > 0.95) {
+        title.style.textShadow = `
+          ${Math.random() * 10}px ${Math.random() * 10}px ${Math.random() * 30}px var(--neon-red),
+          ${Math.random() * -10}px ${Math.random() * -10}px ${Math.random() * 30}px var(--toxic-green)
+        `;
+      } else {
+        title.style.textShadow = '0 0 20px var(--neon-red)';
+      }
+    }, 50);
+  </script>
+</body>
+</html>
